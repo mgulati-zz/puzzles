@@ -1,33 +1,27 @@
 import os
 from bottle import route, run, Bottle
+from bottle.ext.websocket import GeventWebSocketServer
+from bottle.ext.websocket import websocket
 
 
 app= Bottle()
 
-@app.route("/")
+@route("/")
 def hello_world():
         return static_file(index.html, root= '/static')
 
-@app.route("/static/<name>")
+@route("/static/<name>")
 def static(name):
 		return static_file(filename, root='/static')
 
 
-@app.route('/websocket')
-def handle_websocket():
-    wsock = request.environ.get('wsgi.websocket')
-    if not wsock:
-        abort(400, 'Expected WebSocket request.')
-
+@route('/websocket', apply = [websocket])
+def handle_websocket(ws):
     while True:
         try:
-            message = wsock.receive()
+            message = ws.receive()
             wsock.send("Your message was: %r" % message)
         except WebSocketError:
             break
-from gevent.wsgi import WSGIServer
-from geventwebsocket import WebSocketHandler, WebSocketError
 
-server = WSGIServer(("0.0.0.0", 8080), app,
-                    handler_class=WebSocketHandler)
-server.serve_forever()
+run(host='0.0.0.0', port=8080, server=GeventWebSocketServer)

@@ -1,5 +1,5 @@
 import os
-from bottle import route, run, static_file, Bottle
+from bottle import route, run, static_file, Bottle, request, Response
 
 import unicodedata
 from socketio import socketio_manage
@@ -24,56 +24,54 @@ def static(name):
 
 
 class MarkerMixin(object):
-    def __init__(self, *args, **kwargs):
-        super(RoomsMixin, self).__init__(*args, **kwargs)
-        if 'room' not in self.session:
-            self.session['room'] = ""  # a set of simple strings
-        if 'unlocked' not in self.session:
-            self.session['unlocked'] = False
+	def __init__(self, *args, **kwargs):
+		super(MarkerMixin, self).__init__(*args, **kwargs)
+		if 'room' not in self.session:
+			self.session['room'] = ""  # a set of simple strings
+		if 'unlocked' not in self.session:
+			self.session['unlocked'] = False
 
-    def join(self, room):
-        """Lets a user join a room on a specific Namespace."""
-        if(self.session['room'] != room):
-        	self.session['room'] = room
-        	self.session['unlocked'] = False
+	def join(self, room):
+		"""Lets a user join a room on a specific Namespace."""
+		if(self.session['room'] != room):
+			self.session['room'] = room
+			self.session['unlocked'] = False
 
-    def unlock(self):
-    	self.session['unlocked'] = True
-    	room = self.session['room']
-    	pkt = dict(type = "event",
-    		       name = "unlocked")
-    	for sessid, socket in self.socket.server.sockets.iteritems():
-            if 'room' not in socket.session:
-                continue
-            if room == socket.session['room'] and self.socket != socket:
-                socket.send_packet(pkt)
+	def unlock(self):
+		self.session['unlocked'] = True
+		room = self.session['room']
+		pkt = dict(type = "event",
+				   name = "unlocked")
+		for sessid, socket in self.socket.server.sockets.iteritems():
+			if 'room' not in socket.session:
+				continue
+			if room == socket.session['room'] and self.socket != socket:
+				socket.send_packet(pkt)
 
 class ChatNamespace(BaseNamespace, MarkerMixin):
 
-    def on_join(self, room):
-        self.room = room
-        self.join(room)
-        return True
+	def on_join(self, room):
+		self.room = room
+		self.join(room)
+		return True
 
-    def recv_disconnect(self):
-        self.disconnect(silent=True)
-        return True
+	def recv_disconnect(self):
+		self.disconnect(silent=True)
+		return True
 
-    def on_unlock(self):
-        self.unlock()
-        return True
+	def on_unlock(self):
+		self.unlock()
+		return True
 
 @app.route('/ws/')
 def socketio():
-    try:
-        socketio_manage(request.environ, {'/chat': ChatNamespace}, request)
-    except:
-        app.logger.error("Exception while handling socketio connection",
-                         exc_info=True)
-    return Response()
+	try:
+		socketio_manage(request.environ, {'/chat': ChatNamespace}, request)
+	except:
+		print("Exception while handling socketio connection")
+	return Response()
 
-port = os.environ.get('PORT', 5000)
-SocketIOServer(('', port), app, transports=['xhr-polling'], resource="socket.io").serve_forever()
+SocketIOServer(('', os.environ.get('PORT', 5000)), app, transports=['xhr-polling'], resource="socket.io").serve_forever()
 
 
 

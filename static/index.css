@@ -53,12 +53,12 @@ body{
 }
 
 .header {
+	display: none;
 	font-size: 16px;
 	margin: 0;
-	position: relative;
+	position: absolute;
 	padding: .4em 15px;
 	overflow: hidden;
-	display: block;
 	clear: both;
 	border: 1px solid #456f9a;
 	background: #5e87b0;

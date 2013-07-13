@@ -1,5 +1,5 @@
 import os
-from bottle import route, run, static_file, Bottle, request, Response
+from bottle import route, run, Bottle
 
 import unicodedata
 import gevent
@@ -12,13 +12,10 @@ from socketio.server import SocketIOServer
 monkey.patch_all()
 
 app= Bottle()
-app.debug= True
-
-
 
 @app.route("/")
 def hello_world():
-	return static_file("index.html", root= 'static')
+        return static_file(index.html, root= '/static')
 
 @app.route("/static/<name>")
 def static(name):

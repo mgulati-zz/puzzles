@@ -5,6 +5,7 @@ myName = null;
 myMarker = null;
 myLatLng = null;
 lock = null;
+var socket;
 
 var styles = [
   {
@@ -56,6 +57,14 @@ $(function() {
     navigator.geolocation.watchPosition(updateMyLocation, error);
   }
   else error('not supported');
+
+  socket = io.connect(window.location.hostname, {'sync disconnect on unload' : true});
+  socket.on('unlockAll', function() {
+    showHeader('All your friends have unlocked, retreiving reward...');
+    $.get("getReward", data).done(function(data) {
+      alert('throwImageHere');
+    })
+  })
 
 });
 
@@ -109,15 +118,18 @@ function updateMyLocation(myPosition) {
       }
 
       if (data.enabledGoodie) {
-        console.log('timetounlock')
         showLock(data.enabledGoodie)
       }
-      else hideLock();
+      else {
+        clearLock();
+        socket.emit('join',null);
+      }
 
     });  
 }
 
 function showLock(goodie) {
+  socket.emit('join',goodie);
   lock.addClass('opaque');
   $('#title').text(goodie);
   
@@ -135,10 +147,21 @@ function hideLock () {
 
 function unlock() {
   if (goodies[$('#title').text()].members.length == 4) {
-    // socket.emit('unlock');
-    alert('waiting on the others')
+    socket.emit('unlock');
+    showHeader('Waiting on the others to unlock')
   }
   else {
-    alert('you must have four to unlock')
+    showHeader('You must have four adventurers to unlock')
   }
+}
+
+function showHeader(msg) {
+  $('#topBar').text(msg).show();
+}
+
+function clearLock() {
+  $('#topBar').text("").hide();
+  $('#title').text("");
+  $('#members').text("");
+  hideLock();
 }

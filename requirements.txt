@@ -4,3 +4,4 @@ gevent
 gevent-websocket
 bottle-websocket
 bottle-tornadosocket
+gevent-socketio

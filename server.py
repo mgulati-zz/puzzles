@@ -1,7 +1,6 @@
 import os
 from bottle import route, run, Bottle
-from gevent.pywsgi import WSGIServer
-from geventwebsocket import WebSocketHandler, WebSocketError
+
 
 app= Bottle()
 
@@ -26,7 +25,8 @@ def handle_websocket():
             wsock.send("Your message was: %r" % message)
         except WebSocketError:
             break
-
+from gevent.pywsgi import WSGIServer
+from geventwebsocket import WebSocketHandler, WebSocketError
 
 server = WSGIServer(("0.0.0.0", 8080), app,
                     handler_class=WebSocketHandler)

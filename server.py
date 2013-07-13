@@ -1,10 +1,7 @@
 import os
-from bottle import route, run, Bottle
+from bottle import route, run
 from bottle.ext.websocket import GeventWebSocketServer
 from bottle.ext.websocket import websocket
-
-
-app= Bottle()
 
 @route("/")
 def hello_world():
@@ -12,7 +9,7 @@ def hello_world():
 
 @route("/static/<name>")
 def static(name):
-		return static_file(filename, root='/static')
+		return static_file(name, root='/static')
 
 
 @route('/websocket', apply = [websocket])
@@ -24,4 +21,4 @@ def handle_websocket(ws):
         except WebSocketError:
             break
 
-run(host='0.0.0.0', port=8080, server=GeventWebSocketServer)
+run(host='0.0.0.0', port=8080, server=GeventWebSocketServer, debug= True)

@@ -43,16 +43,18 @@ class User(Base):
 	name = Column(String)
 	zoom = Column(Integer)
 	email = Column(String)
-	location = Column(String)
+	lattitude = Column(Real)
+	longitude = Column(Real)
 
-	def __init__(self, name, email, zoom, location):
+	def __init__(self, name, email, zoom, longitude, lattitude):
 		self.name = name
 		self.zoom = zoom
 		self.email = email
-		self.location = location
+		self.lattitude = lattitude
+		self.longitude = longitude
 
 	def __repr__(self):
-		return "<User('%s','%i','%s', '%s')>" % (self.name, self.zoom, self.email, self.location)
+		return "<User('%s','%i','%s', '%i','%i')>" % (self.name, self.zoom, self.email, self.longitude, self.lattitude)
 
 
 class Goodie(Base):
@@ -63,17 +65,19 @@ class Goodie(Base):
 	group_size = Column(Integer)
 	picture = Column(String)
 	description = Column(Text)
-	location = Column(String)
+	lattitude = Column(Real)
+	longitude = Column(Real)
 
-	def __init__(self, name, group_size, picture, description, location):
+	def __init__(self, name, group_size, picture, description, longitude, lattitude):
 		self.name = name
 		self.group_size = group_size
 		self.picture = picture
 		self.description = description
-		self.location = location
+		self.lattitude = lattitude
+		self.longitude = longitude
 
 	def __repr__(self):
-		return "<Goodie('%s','%i','%s','%s','%s')>" % (self.name, self.group_size, self.picture, self.description, self.location)
+		return "<Goodie('%s','%i','%s','%s','%i','%i')>" % (self.name, self.group_size, self.picture, self.description, self.longitude, self.lattitude)
 
 
 Base.metadata.create_all(engine)

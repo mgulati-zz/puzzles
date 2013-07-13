@@ -62,6 +62,29 @@ Base.metadata.create_all(engine)
 session = sessionmaker(bind=engine)()
 
 
+#####----- Tests -----#####
+
+# test1 = User('jared','jared@me.com',10,'here')
+# test2 = User('mary','mary@gmail.com',10,'there')
+# test3 = User('joe','joe@me.com',10,'somewhere')
+# test4 = User('chris','chris@me.com',10,'over there')
+# test5 = User('lauren','lauren@gmail.com',10,'not here')
+# test6 = User('alex','alex@me.com',10,'anywhere')
+
+# goodie = Goodie('coupon',4,'----','free stuff!!','nearby')
+
+# session.add(test1)
+# session.add(test2)
+# session.add(test3)
+# session.add(test4)
+# session.add(test5)
+# session.add(test6)
+
+# session.commit()
+
+# our_user = session.query(User).filter_by(name='jared').first()
+
+# goodie1 = Goodie
 
 
 

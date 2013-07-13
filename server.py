@@ -1,5 +1,5 @@
 import os
-from bottle import route, run
+from bottle import route, run, static_file
 from bottle.ext.websocket import GeventWebSocketServer
 from bottle.ext.websocket import websocket
 

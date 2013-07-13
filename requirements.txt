@@ -3,3 +3,4 @@ SQLAlchemy
 gevent
 gevent-websocket
 bottle-websocket
+bottle-tornadosocket

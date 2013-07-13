@@ -74,8 +74,8 @@ def socketio():
 	return Response()
 
 
-
-SocketIOServer(('0.0.0.0', os.environ.get('PORT', 5000)), app, heartbeat_interval=10, heartbeat_timeout=15, close_timeout=60, transports=['xhr-polling'], resource="socket.io").serve_forever()
+SocketIOServer.serve
+SocketIOServer(('0.0.0.0', os.environ.get('PORT', 5000)), app, heartbeat_interval=10, heartbeat_timeout=15, close_timeout=60, transports=['xhr-polling'], resource="socket.io").serve(app)
 
 
 

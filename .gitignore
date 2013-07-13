@@ -1,3 +1,6 @@
 .DS_Store
 SQLAlchemy/*
 :memory
+socketio/*
+levent/*
+*.pyc

@@ -71,7 +71,7 @@ def socketio():
 		print("Exception while handling socketio connection")
 	return Response()
 
-SocketIOServer(('', os.environ.get('PORT', 5000)), app, transports=['xhr-polling'], resource="socket.io").serve_forever()
+SocketIOServer(('', os.environ.get('PORT', 5000)), app, heartbeat_interval=10, heartbeat_timeout=15, close_timeout=60, transports=['xhr-polling'], resource="socket.io").serve_forever()
 
 
 

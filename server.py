@@ -18,7 +18,7 @@ def handle_websocket(ws):
         try:
             message = ws.receive()
             wsock.send("Your message was: %r" % message)
-        except WebSocketError:
+        except Error:
             break
 
 run(host='0.0.0.0', port=os.environ.get('PORT', 5000), server=GeventWebSocketServer, debug= True)

@@ -21,4 +21,4 @@ def handle_websocket(ws):
         except WebSocketError:
             break
 
-run(host='0.0.0.0', port=8080, server=GeventWebSocketServer, debug= True)
+run(host='0.0.0.0', port=os.environ.get('PORT', 5000), server=GeventWebSocketServer, debug= True)

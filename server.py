@@ -72,8 +72,8 @@ def socketio():
                          exc_info=True)
     return Response()
 
-port=os.environ.get('PORT', 5000)
-SocketIOServer(('', port), app, resource="socket.io").serve_forever()
+port = os.environ.get('PORT', 5000)
+SocketIOServer(('', port), app, transports=['xhr-polling'], resource="socket.io").serve_forever()
 
 
 

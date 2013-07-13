@@ -1,5 +1,5 @@
 import os
-from bottle import route, run, static_file
+from bottle import route, run, static_file, Bottle
 
 import unicodedata
 from socketio import socketio_manage

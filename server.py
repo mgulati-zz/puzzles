@@ -5,11 +5,11 @@ from bottle.ext.websocket import websocket
 
 @route("/")
 def hello_world():
-        return static_file("index.html", root= '/static')
+        return static_file("index.html", root= 'static')
 
 @route("/static/<name>")
 def static(name):
-		return static_file(name, root='/static')
+		return static_file(name, root='static')
 
 
 @route('/websocket', apply = [websocket])

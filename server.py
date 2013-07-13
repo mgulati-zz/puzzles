@@ -25,7 +25,7 @@ def handle_websocket():
             wsock.send("Your message was: %r" % message)
         except WebSocketError:
             break
-from gevent.pywsgi import WSGIServer
+from gevent.wsgi import WSGIServer
 from geventwebsocket import WebSocketHandler, WebSocketError
 
 server = WSGIServer(("0.0.0.0", 8080), app,

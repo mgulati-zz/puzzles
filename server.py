@@ -5,7 +5,7 @@ from bottle.ext.websocket import websocket
 
 @route("/")
 def hello_world():
-        return static_file(index.html, root= '/static')
+        return static_file("index.html", root= '/static')
 
 @route("/static/<name>")
 def static(name):

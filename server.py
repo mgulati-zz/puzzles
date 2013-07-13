@@ -22,9 +22,7 @@ class EchoHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         print 'Connection closed'
 
- tornado_handlers = [
-        (r"/websocket", EchoHandler)
-    ]
+tornado_handlers = [(r"/websocket", EchoHandler)]
 
 
 

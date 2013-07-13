@@ -6,7 +6,25 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
 
-engine = create_engine('sqlite:///:memory:', echo=True)
+import os
+import psycopg2
+import urlparse
+
+##--- for heroku? ---##
+# urlparse.uses_netloc.append("postgres")
+# url = urlparse.urlparse('http://localhost:5432/puzzlesdev') #urlparse.urlparse(os.environ["DATABASE_URL"])
+
+# conn = psycopg2.connect(
+#     database=url.path[1:],
+#     user=url.username,
+#     password=url.password,
+#     host=url.hostname,
+#     port=url.port
+# )
+
+engine = create_engine('postgresql+psycopg2://JaredSmith:f41l54f3@localhost:5432/puzzlesdev')
+
+
 Base = declarative_base()
 
 goodie_group = Table('association', Base.metadata,

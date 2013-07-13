@@ -1,7 +1,10 @@
 google.maps.visualRefresh = true;
 map = null;
-myName = null;
 goodies = {};
+myName = null;
+myMarker = null;
+myLatLng = null;
+lock = null;
 
 var styles = [
   {
@@ -22,19 +25,36 @@ $(function() {
   
   map = new google.maps.Map(document.getElementById("mapCanvas"), mapOptions);
   map.setOptions({styles: styles});
+  
   google.maps.event.addListener(map, 'zoom_changed', function() {
-    this.getZoom()
-  });
-
-  destination = new google.maps.Marker({
-    animation: google.maps.Animation.DROP,
-    map: map
+    updateMyLocation(myLatLng);
   });
 
   google.maps.event.addListener(map, 'click', function(event) {
   });
 
-  if (navigator.geolocation) navigator.geolocation.watchPosition(updateMyLocation, error);
+  myMarker = new google.maps.Marker({
+    animation: google.maps.Animation.DROP,
+    map: map,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      fillColor: "blue",
+      fillOpacity: 1,
+      strokeColor: "black",
+      strokeWeight: 1,
+      scale: 4
+    }
+  })
+
+  lock = $('#lock');
+  lock.click(function() {
+    unlock();
+  })
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(updateMyLocation, error);
+    navigator.geolocation.watchPosition(updateMyLocation, error);
+  }
   else error('not supported');
 
 });
@@ -45,36 +65,80 @@ function error(msg) {
 
 function updateMyLocation(myPosition) {
   var latlng = new google.maps.LatLng(myPosition.coords.latitude, myPosition.coords.longitude);
+  
+  if (myMarker.position == null) map.setCenter(latlng);
+
+  myMarker.setPosition(latlng);
+  myLatLng = myPosition;
 
   data = {name: myName, 
-          location: {latitude: myPosition.coords.latitude, 
-                     longitude: myPosition.coords.longitude}, 
+          latitude: myPosition.coords.latitude, 
+          longitude: myPosition.coords.longitude, 
           zoom: map.getZoom() }
 
   $.get("getGoodies", data)
     .done(function(data) {
-
-      //delete markers that dont exist anymore
+      
+      data = JSON.parse(data);
+      
+      //iterate through all the markers currently in goodies
       for (goodie in goodies) {
+        //delete markers and goodies that didnt come back
         if (!data.goodies.hasOwnProperty(goodie)) {
-          goodie.marker.setMap(null);
-          delete goodie.marker
+          goodies[goodie].marker.setMap(null);
+          delete goodies[goodie];
         }
       }
 
-      //create markers that dont exist yet
       for (goodie in data.goodies) {
-        goodies.goodie = data.goodies.goodie;
-        goodies.goodie.marker = new google.maps.Marker({
-          animation: google.maps.Animation.DROP,
-          map: map,
-          position: new google.maps.LatLng(goodies.goodie.location.latitude, goodies.goodie.location.longitude)        
-        })
+        //update marker positions for existing goodies
+        if (!goodies[goodie]) goodies[goodie] = {};
+        $.extend(goodies[goodie],data.goodies[goodie]);
+        //create the marker if it doesn't already exist
+        if (!goodies[goodie].marker) 
+          goodies[goodie].marker = new google.maps.Marker({
+            animation: google.maps.Animation.DROP,
+            map: map
+          });
+
+        goodies[goodie].marker.setPosition(
+          new google.maps.LatLng(
+            goodies[goodie].location.latitude, 
+            goodies[goodie].location.longitude)
+          );
       }
 
       if (data.enabledGoodie) {
-        showLock(goodies[data.enabledGoodie])
+        console.log('timetounlock')
+        showLock(data.enabledGoodie)
       }
+      else hideLock();
 
     });  
+}
+
+function showLock(goodie) {
+  lock.addClass('opaque');
+  $('#title').text(goodie);
+  
+  var memberList = "";
+  for (member in goodies[goodie].members) {
+    memberList += goodies[goodie].members[member] + ", "
+  }
+  if (memberList.length > 1) memberList = memberList.substring(0, memberList.length - 2)
+  $('#members').text(memberList);
+}
+
+function hideLock () {
+  $('#lock').removeClass('opaque');
+}
+
+function unlock() {
+  if (goodies[$('#title').text()].members.length == 4) {
+    // socket.emit('unlock');
+    alert('waiting on the others')
+  }
+  else {
+    alert('you must have four to unlock')
+  }
 }

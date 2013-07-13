@@ -33,7 +33,7 @@ def getGoodies():
 			},
 			'third': {
 				'description': 'this is the third marker',
-				'members': ['Jay', 'Jared', 'Mayank'],
+				'members': ['Jay', 'Jared', 'Mayank', "Sex"],
 				'location': {	
 					'latitude' : 37.72130604487683,
 					'longitude' : -122.45361328125

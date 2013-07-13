@@ -4,6 +4,8 @@ goodies = {};
 myName = null;
 myMarker = null;
 myLatLng = null;
+lock = null;
+var socket;
 
 var styles = [
   {
@@ -45,11 +47,24 @@ $(function() {
     }
   })
 
+  lock = $('#lock');
+  lock.click(function() {
+    unlock();
+  })
+
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(updateMyLocation, error);
     navigator.geolocation.watchPosition(updateMyLocation, error);
   }
   else error('not supported');
+
+  socket = io.connect(window.location.hostname, {'sync disconnect on unload' : true});
+  socket.on('unlockAll', function() {
+    showHeader('All your friends have unlocked, retreiving reward...');
+    $.get("getReward", data).done(function(data) {
+      alert('throwImageHere');
+    })
+  })
 
 });
 
@@ -103,20 +118,50 @@ function updateMyLocation(myPosition) {
       }
 
       if (data.enabledGoodie) {
-        console.log('timetounlock')
         showLock(data.enabledGoodie)
       }
-      else hideLock();
+      else {
+        clearLock();
+        socket.emit('join',null);
+      }
 
     });  
 }
 
 function showLock(goodie) {
-  var lock = $('#lock');
+  socket.emit('join',goodie);
   lock.addClass('opaque');
-  lock.text(goodie);
+  $('#title').text(goodie);
+  
+  var memberList = "";
+  for (member in goodies[goodie].members) {
+    memberList += goodies[goodie].members[member] + ", "
+  }
+  if (memberList.length > 1) memberList = memberList.substring(0, memberList.length - 2)
+  $('#members').text(memberList);
 }
 
 function hideLock () {
   $('#lock').removeClass('opaque');
+}
+
+function unlock() {
+  if (goodies[$('#title').text()].members.length == 4) {
+    socket.emit('unlock');
+    showHeader('Waiting on the others to unlock')
+  }
+  else {
+    showHeader('You must have four adventurers to unlock')
+  }
+}
+
+function showHeader(msg) {
+  $('#topBar').text(msg).show();
+}
+
+function clearLock() {
+  $('#topBar').text("").hide();
+  $('#title').text("");
+  $('#members').text("");
+  hideLock();
 }

@@ -16,6 +16,7 @@ def static(name):
 def handle_websocket(ws):
     while True:
         try:
+        	print("somebody pinged the websocket"
             message = ws.receive()
             wsock.send("Your message was: %r" % message)
         except Error:

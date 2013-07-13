@@ -22,18 +22,6 @@ def hello_world():
 def static(name):
 	return static_file(name, root='static')
 
-class EchoHandler(tornado.websocket.WebSocketHandler):
-    def open(self):
-        print 'Connected'
-
-    def on_message(self, message):
-        self.write_message(message)
-
-    def on_close(self):
-        print 'Connection closed'
-
-tornado_handlers = [(r"/websocket", EchoHandler)]
-
 
 class MarkerMixin(object):
     def __init__(self, *args, **kwargs):

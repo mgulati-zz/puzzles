@@ -4,6 +4,7 @@ goodies = {};
 myName = null;
 myMarker = null;
 myLatLng = null;
+lock = null;
 
 var styles = [
   {
@@ -43,6 +44,11 @@ $(function() {
       strokeWeight: 1,
       scale: 4
     }
+  })
+
+  lock = $('#lock');
+  lock.click(function() {
+    unlock();
   })
 
   if (navigator.geolocation) {
@@ -112,11 +118,27 @@ function updateMyLocation(myPosition) {
 }
 
 function showLock(goodie) {
-  var lock = $('#lock');
   lock.addClass('opaque');
-  lock.text(goodie);
+  $('#title').text(goodie);
+  
+  var memberList = "";
+  for (member in goodies[goodie].members) {
+    memberList += goodies[goodie].members[member] + ", "
+  }
+  if (memberList.length > 1) memberList = memberList.substring(0, memberList.length - 2)
+  $('#members').text(memberList);
 }
 
 function hideLock () {
   $('#lock').removeClass('opaque');
+}
+
+function unlock() {
+  if (goodies[$('#title').text()].members.length == 4) {
+    // socket.emit('unlock');
+    alert('waiting on the others')
+  }
+  else {
+    alert('you must have four to unlock')
+  }
 }

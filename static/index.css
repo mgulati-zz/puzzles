@@ -9,16 +9,22 @@ body{height:100%;margin:0;padding:0}
 
 #lock{
 	position: absolute;
-	height: 80px;
-	width: 80px;
+	height: 120px;
+	width: 120px;
 	top: 50%;
 	left: 50%;
-	margin-top: -40px;
-	margin-left: -40px;
-	background-color: black;
+	margin-top: -60px;
+	margin-left: -60px;
+	background-image: url('/static/lock.png');
+	background-size: contain;
+	background-repeat: no-repeat;
 	opacity: 0;
 	z-index: 1;
 	color: white;
+	text-align: center;
+	font-family: helvetica;	
+	cursor: pointer;
+	pointer-events: none;
     -webkit-transition: opacity 2s ease-in-out;
     -moz-transition: opactiy 2s ease-in-out;
     -ms-transition: opacity 2s ease-in-out;
@@ -26,6 +32,19 @@ body{height:100%;margin:0;padding:0}
     transition: opacity 2s ease-in-out;
 }
 
+#lock span {
+	display: block;
+	position: relative;
+	top: 80px;
+}
+
+#members {
+	font-weight: bold;
+	top: 90px !important;
+	color: black;
+}
+
 .opaque {
 	opacity: 1 !important;
+	pointer-events: auto !important;
 }

@@ -4,7 +4,6 @@ from bottle import route, run, static_file
 import unicodedata
 from socketio import socketio_manage
 from socketio.namespace import BaseNamespace
-from werkzeug.exceptions import NotFound
 from gevent import monkey
 from socketio.server import SocketIOServer
 

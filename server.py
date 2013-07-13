@@ -2,6 +2,8 @@ import os
 from bottle import route, run, static_file, Bottle, request, Response
 
 import unicodedata
+import gevent
+from gevent.wsgi import WSGIServer
 from socketio import socketio_manage
 from socketio.namespace import BaseNamespace
 from gevent import monkey
@@ -71,7 +73,9 @@ def socketio():
 		print("Exception while handling socketio connection")
 	return Response()
 
-SocketIOServer(('', os.environ.get('PORT', 5000)), app, heartbeat_interval=10, heartbeat_timeout=15, close_timeout=60, transports=['xhr-polling'], resource="socket.io").serve_forever()
+
+
+SocketIOServer(('0.0.0.0', os.environ.get('PORT', 5000)), app, heartbeat_interval=10, heartbeat_timeout=15, close_timeout=60, transports=['xhr-polling'], resource="socket.io").serve_forever()
 
 
 

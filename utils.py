@@ -6,7 +6,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
 
-engine = create_engine('sqlite:///:memory:', echo=True)
+# engine = create_engine('sqlite:///:memory:', echo=True)
+engine = create_engine('postgresql+psycopg2://scott:tiger@localhost/puzzles')
 Base = declarative_base()
 
 goodie_group = Table('association', Base.metadata,

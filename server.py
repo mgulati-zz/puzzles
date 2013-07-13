@@ -63,8 +63,8 @@ class ChatNamespace(BaseNamespace, MarkerMixin):
         self.unlock()
         return True
 
-@app.route('/ws/<path:remaining>')
-def socketio(remaining):
+@app.route('/ws/')
+def socketio():
     try:
         socketio_manage(request.environ, {'/chat': ChatNamespace}, request)
     except:

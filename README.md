@@ -1,4 +1,4 @@
 puzzles
 =======
 
-Put your phones together and unlock amazing things
+Moved to http://github.com/mgulati/puzzleNode
